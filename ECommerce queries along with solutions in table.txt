@@ -1,0 +1,476 @@
+Microsoft Windows [Version 10.0.26100.3775]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Sanjaykumar P>mysql --versions
+mysql: [ERROR] unknown option '--versions'.
+
+C:\Users\Sanjaykumar P>mysql --versions
+mysql: [ERROR] unknown option '--versions'.
+
+C:\Users\Sanjaykumar P>mysql --versions
+mysql: [ERROR] unknown option '--versions'.
+
+C:\Users\Sanjaykumar P> mysql --version
+mysql  Ver 8.0.42 for Win64 on x86_64 (MySQL Community Server - GPL)
+
+C:\Users\Sanjaykumar P>mysql -u root -p
+Enter password: ********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 35
+Server version: 8.0.42 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create Shopping Database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Shopping Database' at line 1
+mysql> create database Shopping;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> Use Shopping db;
+Database changed
+mysql> create table customers(customer_id INT PRIMARY KEY,name varchar(100),email varchar(100) UNIQUE,password varchar(300));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> drop table customers;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE customers((
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> Create table customers(customer_id INT PRIMARY KEY,first_name VARCHAR(50),last_name VARCHAR(50),email VARCHAR(100) UNIQUE,address TEXT);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table products (product_id INT PRIMARY KEY,name VARCHAR(100),price DECIMAL(10,2),description TEXT, stockQuantity INT);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table cart( cart_id INT PRIMARY KEY,customer_id INT,product_id INT, quantity INT,FOREIGN KEY (customer_id) REFERENCES customers(customer_id),FOREIGN KEY (product_id) REFERENCES products(product_id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table orders(order_id INT PRIMARY KEY,customer_id INT,order_date DATE,total_price DECIMAL(10,2),FOREIGN KEY (customer_id) REFERENCES customers(customer_id));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create table order_items(order_item_id INT PRIMARY KEY,order_id INT,product_id INT,quantity INT,item_amount DECIMAL(10,2),FOREIGN KEY (order_id) REFERENCES orders(order_id),FOREIGN KEY (product_id) REFERENCES products(product_id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into customers (customer_id, first_name, last_name, email, address) VALUES(1, 'John', 'Doe', 'johndoe@example.com', '123 Main St, City'),(2, 'Jane', 'Smith', 'janesmith@example.com', '456 Elm St, Town'),(3, 'Robert', 'Johnson', 'robert@example.com', '789 Oak St, Village');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from  customers;
++-------------+------------+-----------+-----------------------+---------------------+
+| customer_id | first_name | last_name | email                 | address             |
++-------------+------------+-----------+-----------------------+---------------------+
+|           1 | John       | Doe       | johndoe@example.com   | 123 Main St, City   |
+|           2 | Jane       | Smith     | janesmith@example.com | 456 Elm St, Town    |
+|           3 | Robert     | Johnson   | robert@example.com    | 789 Oak St, Village |
++-------------+------------+-----------+-----------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into products(product_id,name,description,price,stockQuantity) VALUES(1, 'Laptop', 'High-performance laptop', 800.00, 10),(2, 'Smartphone', 'Latest smartphone', 600.00, 15),(3, 'Tablet', 'Portable tablet',300.00, 20);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from products;
++------------+------------+--------+-------------------------+---------------+
+| product_id | name       | price  | description             | stockQuantity |
++------------+------------+--------+-------------------------+---------------+
+|          1 | Laptop     | 800.00 | High-performance laptop |            10 |
+|          2 | Smartphone | 600.00 | Latest smartphone       |            15 |
+|          3 | Tablet     | 300.00 | Portable tablet         |            20 |
++------------+------------+--------+-------------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into orders(order_id, customer_id, order_date, total_price) VALUES(1, 1, '2023-01-05', 1200.00),(2, 2, '2023-02-10', 900.00),(3, 3, '2023-03-15', 300.00);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from orders;
++----------+-------------+------------+-------------+
+| order_id | customer_id | order_date | total_price |
++----------+-------------+------------+-------------+
+|        1 |           1 | 2023-01-05 |     1200.00 |
+|        2 |           2 | 2023-02-10 |      900.00 |
+|        3 |           3 | 2023-03-15 |      300.00 |
++----------+-------------+------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into order_items(order_item_id, order_id, product_id, quantity, item_amount) VALUES(1, 1, 1, 2,1600.00),(2, 1, 3, 1, 300.00),(3, 2, 2, 3, 1800.00);
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from order_items;
++---------------+----------+------------+----------+-------------+
+| order_item_id | order_id | product_id | quantity | item_amount |
++---------------+----------+------------+----------+-------------+
+|             1 |        1 |          1 |        2 |     1600.00 |
+|             2 |        1 |          3 |        1 |      300.00 |
+|             3 |        2 |          2 |        3 |     1800.00 |
++---------------+----------+------------+----------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> insert into cart(cart_id, customer_id, product_id, quantity)VALUES(1, 1, 1, 2),(2, 1, 3, 1),(3, 2, 2, 3);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from cart;
++---------+-------------+------------+----------+
+| cart_id | customer_id | product_id | quantity |
++---------+-------------+------------+----------+
+|       1 |           1 |          1 |        2 |
+|       2 |           1 |          3 |        1 |
+|       3 |           2 |          2 |        3 |
++---------+-------------+------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> UPDATE products SET price = 800 WHERE product_id = 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from products;
++------------+------------+--------+-------------------------+---------------+
+| product_id | name       | price  | description             | stockQuantity |
++------------+------------+--------+-------------------------+---------------+
+|          1 | Laptop     | 800.00 | High-performance laptop |            10 |
+|          2 | Smartphone | 600.00 | Latest smartphone       |            15 |
+|          3 | Tablet     | 800.00 | Portable tablet         |            20 |
++------------+------------+--------+-------------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> Delete from cart where customer_id = 1;
+Query OK, 2 rows affected (0.00 sec)
+
+mysql> select * from cart;
++---------+-------------+------------+----------+
+| cart_id | customer_id | product_id | quantity |
++---------+-------------+------------+----------+
+|       3 |           2 |          2 |        3 |
++---------+-------------+------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select  product_id, name,description, stockQuantity from products where price<100;
+Empty set (0.00 sec)
+
+mysql> select product_id,name from products where  stockQuantity >5;
++------------+------------+
+| product_id | name       |
++------------+------------+
+|          1 | Laptop     |
+|          2 | Smartphone |
+|          3 | Tablet     |
++------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select  order_id, customer_id from  orders where  total_price BETWEEN 500 AND 1000;
++----------+-------------+
+| order_id | customer_id |
++----------+-------------+
+|        2 |           2 |
++----------+-------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO products (product_id, name, description, price, stockQuantity) VALUES
+    -> (4, 'Blender', 'High-speed blender', 70.00, 20);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from products;
++------------+------------+--------+-------------------------+---------------+
+| product_id | name       | price  | description             | stockQuantity |
++------------+------------+--------+-------------------------+---------------+
+|          1 | Laptop     | 800.00 | High-performance laptop |            10 |
+|          2 | Smartphone | 600.00 | Latest smartphone       |            15 |
+|          3 | Tablet     | 800.00 | Portable tablet         |            20 |
+|          4 | Blender    |  70.00 | High-speed blender      |            20 |
++------------+------------+--------+-------------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from products where name LIKE 'r%';
+Empty set (0.00 sec)
+
+mysql> select * from products where name LIKE '%r';
++------------+---------+-------+--------------------+---------------+
+| product_id | name    | price | description        | stockQuantity |
++------------+---------+-------+--------------------+---------------+
+|          4 | Blender | 70.00 | High-speed blender |            20 |
++------------+---------+-------+--------------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select cart_id,customer_id,product_id,quantity from cart where customer_id = 2;
++---------+-------------+------------+----------+
+| cart_id | customer_id | product_id | quantity |
++---------+-------------+------------+----------+
+|       3 |           2 |          2 |        3 |
++---------+-------------+------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select customers.customer_id,customers.first_name,customers.last_name,customers.address,orders.order_id from customers JOIN orders ON customers.customer_id = orders.customer_id where YEAR(orders.order_date) = 2023;
++-------------+------------+-----------+---------------------+----------+
+| customer_id | first_name | last_name | address             | order_id |
++-------------+------------+-----------+---------------------+----------+
+|           1 | John       | Doe       | 123 Main St, City   |        1 |
+|           2 | Jane       | Smith     | 456 Elm St, Town    |        2 |
+|           3 | Robert     | Johnson   | 789 Oak St, Village |        3 |
++-------------+------------+-----------+---------------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> select name,min(stockQuantity) from products GROUP BY name;
++------------+--------------------+
+| name       | min(stockQuantity) |
++------------+--------------------+
+| Laptop     |                 10 |
+| Smartphone |                 15 |
+| Tablet     |                 20 |
+| Blender    |                 20 |
++------------+--------------------+
+4 rows in set (0.00 sec)
+
+mysql> select customers.first_name,customers.last_name,COUNT(orders.total_price) from customers JOIN orders ON customers.customer_id = orders.customer_id GROUP BY customers.first_name;
+ERROR 1055 (42000): Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'shopping.customers.last_name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql>  select customers.first_name,customers.last_name,SUM(orders.total_price) from customers JOIN orders ONcustomers.customer_id = orders.customer_id GROUP BY customers.first_name,customers.last_name;
++------------+-----------+-------------------------+
+| first_name | last_name | SUM(orders.total_price) |
++------------+-----------+-------------------------+
+| John       | Doe       |                 1200.00 |
+| Jane       | Smith     |                  900.00 |
+| Robert     | Johnson   |                  300.00 |
++------------+-----------+-------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select  customers.first_name,^C
+mysql> select  customers.first_name,customers.last_name,AVG(orders.total_price) from customers JOIN orders ONcustomers.customer_id = orders.customer_id GROUP BY customers.first_name,customers.last_name;
++------------+-----------+-------------------------+
+| first_name | last_name | AVG(orders.total_price) |
++------------+-----------+-------------------------+
+| John       | Doe       |             1200.000000 |
+| Jane       | Smith     |              900.000000 |
+| Robert     | Johnson   |              300.000000 |
++------------+-----------+-------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select customers.first_name,customers.last_name,COUNT(orders.order_id) from customers JOIN orders ON customers.customer_id = orders.customer_id GROUP BY customers.first_name,customers.last_name;
++------------+-----------+------------------------+
+| first_name | last_name | COUNT(orders.order_id) |
++------------+-----------+------------------------+
+| John       | Doe       |                      1 |
+| Jane       | Smith     |                      1 |
+| Robert     | Johnson   |                      1 |
++------------+-----------+------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select select customers.first_name,customers.last_name,MAX(orders.total_price) from customers JOIN orders ON customers.customer_id = orders.customer_id GROUP BY customers.first_name,customers.last_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select customers.first_name,customers.last_name,MAX(orders.total_price) from cus' at line 1
+mysql> select customers.first_name,customers.last_name,MAX(orders.total_price) from customers JOIN orders ON customers.customer_id = orders.customer_id GROUP BY customers.first_name,customers.last_name;
++------------+-----------+-------------------------+
+| first_name | last_name | MAX(orders.total_price) |
++------------+-----------+-------------------------+
+| John       | Doe       |                 1200.00 |
+| Jane       | Smith     |                  900.00 |
+| Robert     | Johnson   |                  300.00 |
++------------+-----------+-------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select customers.customer_id,customers.first_name,customers.last_name,SUM(orders.total_price) from customers JOIN orders ON customers.customer_id = orders.customer_id GROUP BY  customers.first_name,customers.last_name HAVING SUM(orders.total_price)>1000;
+ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'shopping.customers.customer_id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+mysql> select customers.customer_id, customers.first_name, customers.last_name, SUM(orders.total_price) from customers JOIN orders ON customers.customer_id = orders.customer_id GROUP BY customers.customer_id, customers.first_name, customers.last_name HAVING SUM(orders.total_price) > 1000;
++-------------+------------+-----------+-------------------------+
+| customer_id | first_name | last_name | SUM(orders.total_price) |
++-------------+------------+-----------+-------------------------+
+|           1 | John       | Doe       |                 1200.00 |
++-------------+------------+-----------+-------------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from products;
++------------+------------+--------+-------------------------+---------------+
+| product_id | name       | price  | description             | stockQuantity |
++------------+------------+--------+-------------------------+---------------+
+|          1 | Laptop     | 800.00 | High-performance laptop |            10 |
+|          2 | Smartphone | 600.00 | Latest smartphone       |            15 |
+|          3 | Tablet     | 800.00 | Portable tablet         |            20 |
+|          4 | Blender    |  70.00 | High-speed blender      |            20 |
++------------+------------+--------+-------------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from cart;
++---------+-------------+------------+----------+
+| cart_id | customer_id | product_id | quantity |
++---------+-------------+------------+----------+
+|       3 |           2 |          2 |        3 |
++---------+-------------+------------+----------+
+1 row in set (0.00 sec)
+
+mysql> select  name,price from products where product_id IN( select product_id from cart where product_id IS 'NULL';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''NULL'' at line 1
+mysql> elect  name,price from products where product_id IN( select product_id from cart where product_id IS NULL;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'elect  name,price from products where product_id IN( select product_id from cart' at line 1
+mysql> select  name,price from products where product_id IN( select product_id from cart where product_id IS NULL;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> select  name,price from products where product_id IN( select product_id from cart where product_id IS NULL);
+Empty set (0.00 sec)
+
+mysql> SELECT product_id, name, price
+    -> FROM products
+    -> WHERE product_id NOT IN (
+    ->     SELECT DISTINCT product_id
+    ->     FROM cart
+    -> );
++------------+---------+--------+
+| product_id | name    | price  |
++------------+---------+--------+
+|          1 | Laptop  | 800.00 |
+|          3 | Tablet  | 800.00 |
+|          4 | Blender |  70.00 |
++------------+---------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select from customers;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from customers' at line 1
+mysql> select* from customers;
++-------------+------------+-----------+-----------------------+---------------------+
+| customer_id | first_name | last_name | email                 | address             |
++-------------+------------+-----------+-----------------------+---------------------+
+|           1 | John       | Doe       | johndoe@example.com   | 123 Main St, City   |
+|           2 | Jane       | Smith     | janesmith@example.com | 456 Elm St, Town    |
+|           3 | Robert     | Johnson   | robert@example.com    | 789 Oak St, Village |
++-------------+------------+-----------+-----------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from orders;
++----------+-------------+------------+-------------+
+| order_id | customer_id | order_date | total_price |
++----------+-------------+------------+-------------+
+|        1 |           1 | 2023-01-05 |     1200.00 |
+|        2 |           2 | 2023-02-10 |      900.00 |
+|        3 |           3 | 2023-03-15 |      300.00 |
++----------+-------------+------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select first_name,last_name from customers where customer_id NOT IN (select customer_id from orders);
+Empty set (0.00 sec)
+
+mysql> select * products;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'products' at line 1
+mysql> select * from products
+    -> ;
++------------+------------+--------+-------------------------+---------------+
+| product_id | name       | price  | description             | stockQuantity |
++------------+------------+--------+-------------------------+---------------+
+|          1 | Laptop     | 800.00 | High-performance laptop |            10 |
+|          2 | Smartphone | 600.00 | Latest smartphone       |            15 |
+|          3 | Tablet     | 800.00 | Portable tablet         |            20 |
+|          4 | Blender    |  70.00 | High-speed blender      |            20 |
++------------+------------+--------+-------------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select product_id,name from products where stockQuantity IN ( select min(stockQuantity) from products);
++------------+--------+
+| product_id | name   |
++------------+--------+
+|          1 | Laptop |
++------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from customers;
++-------------+------------+-----------+-----------------------+---------------------+
+| customer_id | first_name | last_name | email                 | address             |
++-------------+------------+-----------+-----------------------+---------------------+
+|           1 | John       | Doe       | johndoe@example.com   | 123 Main St, City   |
+|           2 | Jane       | Smith     | janesmith@example.com | 456 Elm St, Town    |
+|           3 | Robert     | Johnson   | robert@example.com    | 789 Oak St, Village |
++-------------+------------+-----------+-----------------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from orders;
++----------+-------------+------------+-------------+
+| order_id | customer_id | order_date | total_price |
++----------+-------------+------------+-------------+
+|        1 |           1 | 2023-01-05 |     1200.00 |
+|        2 |           2 | 2023-02-10 |      900.00 |
+|        3 |           3 | 2023-03-15 |      300.00 |
++----------+-------------+------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select first_name,last_name ,email, address where customer_id IN ( select customer_id from orders)wheretotal_price IN (select MAX(total_price) from orders);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'wheretotal_price IN (select MAX(total_price) from orders)' at line 1
+mysql> select first_name,last_name ,email, address where customer_id IN  ( select customer_id from orders)wheretotal_price = (select MAX(total_price) from orders));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'wheretotal_price = (select MAX(total_price) from orders))' at line 1
+mysql>  select first_name,last_name ,email, address where customer_id IN  ( select customer_id from orders)wheretotal_price = (select MAX(total_price) from orders);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'wheretotal_price = (select MAX(total_price) from orders)' at line 1
+mysql>  select first_name,last_name ,email, address where customer_id IN  ( select customer_id from orders)where total_price = (select MAX(total_price) from orders));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where total_price = (select MAX(total_price) from orders))' at line 1
+mysql> select first_name,last_name ,email, address from customers where customer_id IN  ( select customer_id from orders)where total_price = (select MAX(total_price) from orders));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where total_price = (select MAX(total_price) from orders))' at line 1
+mysql> select first_name,last_name ,email, address from customers where customer_id IN  ( select customer_id from orders where total_price = (select MAX(total_price) from orders));
++------------+-----------+---------------------+-------------------+
+| first_name | last_name | email               | address           |
++------------+-----------+---------------------+-------------------+
+| John       | Doe       | johndoe@example.com | 123 Main St, City |
++------------+-----------+---------------------+-------------------+
+1 row in set (0.00 sec)
+
+mysql> select * from product;
+ERROR 1146 (42S02): Table 'shopping.product' doesn't exist
+mysql> select * from products;
++------------+------------+--------+-------------------------+---------------+
+| product_id | name       | price  | description             | stockQuantity |
++------------+------------+--------+-------------------------+---------------+
+|          1 | Laptop     | 800.00 | High-performance laptop |            10 |
+|          2 | Smartphone | 600.00 | Latest smartphone       |            15 |
+|          3 | Tablet     | 800.00 | Portable tablet         |            20 |
+|          4 | Blender    |  70.00 | High-speed blender      |            20 |
++------------+------------+--------+-------------------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from order_items;
++---------------+----------+------------+----------+-------------+
+| order_item_id | order_id | product_id | quantity | item_amount |
++---------------+----------+------------+----------+-------------+
+|             1 |        1 |          1 |        2 |     1600.00 |
+|             2 |        1 |          3 |        1 |      300.00 |
+|             3 |        2 |          2 |        3 |     1800.00 |
++---------------+----------+------------+----------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select products.product_id,products.name,SUM(order.item_amount),(SUM(order_itemAmount) FROM order_items)) from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM order_items)) from products JOIN order_items ON products.product_id = order' at line 1
+mysql>  select products.product_id,products.name,SUM(order_items.itemAmount),(SUM(order_items.itemAmount) from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from products JOIN order_items ON products.product_id = order_items.product_id G' at line 1
+mysql>  select products.product_id,products.name,SUM(order_items.itemAmount),(SUM(order_items.itemAmount) from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from products JOIN order_items ON products.product_id = order_items.product_id G' at line 1
+mysql> SELECT
+    ->     products.product_id,
+    ->     products.name,
+    ->     SUM(order_items.itemAmount) AS total_item_amount
+    -> FROM products
+    -> JOIN order_items ON products.product_id = order_items.product_id
+    -> GROUP BY products.product_id, products.name;
+ERROR 1054 (42S22): Unknown column 'order_items.itemAmount' in 'field list'
+mysql> select products.product_id,products.name,SUM(order_items.itemAmount)from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
+ERROR 1054 (42S22): Unknown column 'order_items.itemAmount' in 'field list'
+mysql>  select products.product_id,products.name,SUM(order_items.item_Amount)from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
++------------+------------+------------------------------+
+| product_id | name       | SUM(order_items.item_Amount) |
++------------+------------+------------------------------+
+|          1 | Laptop     |                      1600.00 |
+|          3 | Tablet     |                       300.00 |
+|          2 | Smartphone |                      1800.00 |
++------------+------------+------------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select products.product_id,products.name,SUM(order_items.item_Amount,(SUM(order_items.item_Amount)*100/(select SUM(item_Amount)from order_items))from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',(SUM(order_items.item_Amount)*100/(select SUM(item_Amount)from order_items))fro' at line 1
+mysql> select products.product_id,products.name,SUM(order_items.item_Amount),(SUM(order_items.item_Amount)*100/(select SUM(order_items.item_Amount)from order_items))from products JOIN order_items ON products.product_id = order_items.product_id GROUP BY products.product_id,products.name;
++------------+------------+------------------------------+------------------------------------------------------------------------------------------+
+| product_id | name       | SUM(order_items.item_Amount) | (SUM(order_items.item_Amount)*100/(select SUM(order_items.item_Amount)from order_items)) |
++------------+------------+------------------------------+------------------------------------------------------------------------------------------+
+|          1 | Laptop     |                      1600.00 |                            43.243243 |
+|          3 | Tablet     |                       300.00 |                             8.108108 |
+|          2 | Smartphone |                      1800.00 |                            48.648649 |
++------------+------------+------------------------------+------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+mysql>
